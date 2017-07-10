@@ -573,6 +573,14 @@ module.exports = {
             'If *false*, this axis does not overlay any same-letter axes.'
         ].join(' ')
     },
+    abovetraces: {
+        valType: 'boolean',
+        dflt: true,
+        role: 'info',
+        description: [
+            'Determines if this axis is displayed above the traces in the subplot or not.'
+        ].join(' ')
+    },
     domain: {
         valType: 'info_array',
         role: 'info',

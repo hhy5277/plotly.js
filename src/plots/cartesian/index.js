@@ -297,6 +297,9 @@ function makeSubplotLayer(plotinfo) {
     var plotgroup = plotinfo.plotgroup;
     var id = plotinfo.id;
 
+    var xLevel = plotinfo.xaxis.abovetraces ? 'above' : 'below';
+    var yLevel = plotinfo.yaxis.abovetraces ? 'above' : 'below';
+
     if(!plotinfo.mainplot) {
         var backLayer = joinLayer(plotgroup, 'g', 'layer-subplot');
         plotinfo.shapelayer = joinLayer(backLayer, 'g', 'shapelayer');
@@ -308,19 +311,36 @@ function makeSubplotLayer(plotinfo) {
         plotinfo.zerolinelayer = joinLayer(plotgroup, 'g', 'zerolinelayer');
         plotinfo.overzero = joinLayer(plotgroup, 'g', 'overzero');
 
+        joinLayer(plotgroup, 'path', 'xlines-below');
+        joinLayer(plotgroup, 'path', 'ylines-below');
+        plotinfo.overlinesBelow = joinLayer(plotgroup, 'g', 'overlines-below');
+
+        joinLayer(plotgroup, 'g', 'xaxislayer-below');
+        joinLayer(plotgroup, 'g', 'yaxislayer-below');
+        plotinfo.overaxesBelow = joinLayer(plotgroup, 'g', 'overaxes-below');
+
         plotinfo.plot = joinLayer(plotgroup, 'g', 'plot');
         plotinfo.overplot = joinLayer(plotgroup, 'g', 'overplot');
 
-        plotinfo.xlines = joinLayer(plotgroup, 'path', 'xlines');
-        plotinfo.ylines = joinLayer(plotgroup, 'path', 'ylines');
-        plotinfo.overlines = joinLayer(plotgroup, 'g', 'overlines');
+        joinLayer(plotgroup, 'path', 'xlines-above');
+        joinLayer(plotgroup, 'path', 'ylines-above');
+        plotinfo.overlinesAbove = joinLayer(plotgroup, 'g', 'overlines-above');
 
-        plotinfo.xaxislayer = joinLayer(plotgroup, 'g', 'xaxislayer');
-        plotinfo.yaxislayer = joinLayer(plotgroup, 'g', 'yaxislayer');
-        plotinfo.overaxes = joinLayer(plotgroup, 'g', 'overaxes');
+        joinLayer(plotgroup, 'g', 'xaxislayer-above');
+        joinLayer(plotgroup, 'g', 'yaxislayer-above');
+        plotinfo.overaxesAbove = joinLayer(plotgroup, 'g', 'overaxes-above');
+
+        // set refs to correct layers as determined by 'abovetraces'
+        plotinfo.xlines = plotgroup.select('.xlines-' + xLevel);
+        plotinfo.ylines = plotgroup.select('.ylines-' + yLevel);
+        plotinfo.xaxislayer = plotgroup.select('.xaxislayer-' + xLevel);
+        plotinfo.yaxislayer = plotgroup.select('.yaxislayer-' + yLevel);
     }
     else {
         var mainplotinfo = plotinfo.mainplotinfo;
+        var mainplotgroup = mainplotinfo.plotgroup;
+        var xId = id + '-x';
+        var yId = id + '-y';
 
         // now make the components of overlaid subplots
         // overlays don't have backgrounds, and append all
@@ -330,11 +350,23 @@ function makeSubplotLayer(plotinfo) {
         plotinfo.gridlayer = joinLayer(mainplotinfo.overgrid, 'g', id);
         plotinfo.zerolinelayer = joinLayer(mainplotinfo.overzero, 'g', id);
 
+        joinLayer(mainplotinfo.overlinesBelow, 'path', xId);
+        joinLayer(mainplotinfo.overlinesBelow, 'path', yId);
+        joinLayer(mainplotinfo.overaxesBelow, 'g', xId);
+        joinLayer(mainplotinfo.overaxesBelow, 'g', yId);
+
         plotinfo.plot = joinLayer(mainplotinfo.overplot, 'g', id);
-        plotinfo.xlines = joinLayer(mainplotinfo.overlines, 'path', id + '-x');
-        plotinfo.ylines = joinLayer(mainplotinfo.overlines, 'path', id + '-y');
-        plotinfo.xaxislayer = joinLayer(mainplotinfo.overaxes, 'g', id + '-x');
-        plotinfo.yaxislayer = joinLayer(mainplotinfo.overaxes, 'g', id + '-y');
+
+        joinLayer(mainplotinfo.overlinesAbove, 'path', xId);
+        joinLayer(mainplotinfo.overlinesAbove, 'path', yId);
+        joinLayer(mainplotinfo.overaxesAbove, 'g', xId);
+        joinLayer(mainplotinfo.overaxesAbove, 'g', yId);
+
+        // set refs to correct layers as determined by 'abovetraces'
+        plotinfo.xlines = mainplotgroup.select('.overlines-' + xLevel).select('.' + xId);
+        plotinfo.ylines = mainplotgroup.select('.overlines-' + yLevel).select('.' + yId);
+        plotinfo.xaxislayer = mainplotgroup.select('.overaxes-' + xLevel).select('.' + xId);
+        plotinfo.yaxislayer = mainplotgroup.select('.overaxes-' + yLevel).select('.' + yId);
     }
 
     // common attributes for all subplots, overlays or not
@@ -350,6 +382,7 @@ function makeSubplotLayer(plotinfo) {
     plotinfo.ylines
         .style('fill', 'none')
         .classed('crisp', true);
+
 }
 
 function purgeSubplotLayers(layers, fullLayout) {

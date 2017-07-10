@@ -403,4 +403,14 @@ describe('subplot creation / deletion:', function() {
         .catch(failTest)
         .then(done);
     });
+
+    it('should clear obsolete content out of axis layers when relayout\'ing *abovetraces*', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/overlaying-axis-lines.json'));
+
+        Plotly.plot(gd, fig).then(function() {
+
+        })
+        .catch(failTest)
+        .then(done);
+    });
 });
