@@ -31,6 +31,8 @@ module.exports = function calc(gd, trace) {
         s,
         i;
 
+    var hasClipOnAxisFalse = trace.cliponaxis === false;
+
     // cancel minimum tick spacings (only applies to bars and boxes)
     xa._minDtick = 0;
     ya._minDtick = 0;
@@ -43,7 +45,7 @@ module.exports = function calc(gd, trace) {
     var xOptions = {padded: true},
         yOptions = {padded: true};
 
-    if(subTypes.hasMarkers(trace)) {
+    if(subTypes.hasMarkers(trace) && !hasClipOnAxisFalse) {
 
         // Treat size like x or y arrays --- Run d2c
         // this needs to go before ppad computation
@@ -106,6 +108,11 @@ module.exports = function calc(gd, trace) {
     // tight y: any x fill
     else if(['tonextx', 'tozerox'].indexOf(trace.fill) !== -1) {
         yOptions.padded = false;
+    }
+
+    if(hasClipOnAxisFalse) {
+        xOptions = {};
+        yOptions = {};
     }
 
     Axes.expand(xa, x, xOptions);

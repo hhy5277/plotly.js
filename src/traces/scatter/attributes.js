@@ -183,7 +183,7 @@ module.exports = {
         valType: 'boolean',
         dflt: true,
         role: 'info',
-        editType: 'doplot',
+        editType: 'docalc',
         description: [
             'Determines whether or not markers and text nodes',
             'are clipped about the subplot axes.'
