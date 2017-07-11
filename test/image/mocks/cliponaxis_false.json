@@ -43,6 +43,17 @@
       "cliponaxis": false,
       "xaxis": "x2",
       "yaxis": "y2"
+    },
+    {
+      "mode": "markers+text",
+      "x": [1, 1.5, 2.5, 3, 2.5, 1.5],
+      "y": [1.5, 1, 1, 1.5, 2, 2],
+      "marker": {
+        "size": 30
+      },
+      "text": "clipped<br>should not see this!",
+      "textposition": ["left", "bottom", "bottom", "right", "top", "top"],
+      "cliponaxis": true
     }
   ],
   "layout": {
